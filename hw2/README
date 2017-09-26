@@ -1,0 +1,12 @@
+HW2: Lorenz Attractor
+
+Dilara Madinger
+CSCI4229/5229 Fall 2017
+
+Three dimensional visualization of the Lorenz Attractor.
+Based on class exercise - ex6.
+
+Key bindings
+  arrows Change view angle
+  0      Reset view angle
+  ESC    Exit
