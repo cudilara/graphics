@@ -25,7 +25,9 @@ int mode=1;     // Dimension (1-4)
 double z=0;     // Z variable
 double w=1;     // W variable
 double dim=2;   // Dimension of orthogonal box
-char* text[] = {"","2D","3D constant Z","3D","4D"};  // Dimension display text
+double xFactor = 0.04; //Allows modifying x dimension
+unsigned int applyXFactor = 0;//flag to test for x dimension
+char* text[] = {"","", "3D constant Z","3D","4D"};  // Dimension display text
 
 /*
  *  Convenience routine to output raster text
@@ -94,7 +96,7 @@ void generate_graph(){
             colb = 0;
         }
         glColor3f(colr, colg, colb);
-        glVertex3d(x*.04,y*.04,z*.04);
+        glVertex3d(x*xFactor,y*.04,z*.04);
     }
 }
 
@@ -110,7 +112,7 @@ void display()
    //  Set view angle
    glRotated(ph,1,0,0);//here order matters
    glRotated(th,0,1,0);
-   glBegin(GL_LINE_LOOP);
+    glBegin(GL_LINE_LOOP);
     generate_graph();
     glEnd();
    //  Draw axes in white
@@ -132,7 +134,10 @@ void display()
    Print("Z");
    //  Display parameters
    glWindowPos2i(5,5);
-   Print("View Angle=%d,%d",th,ph);
+   Print("View Angle=%d,%d %s",th,ph,text[mode]);
+    if (applyXFactor)
+        Print("  x=%f",xFactor);
+    
    //  Flush and swap
    glFlush();
    glutSwapBuffers();
@@ -148,7 +153,36 @@ void key(unsigned char ch,int x,int y)
       exit(0);
    //  Reset view angle
    else if (ch == '0')
-      th = ph = 0;
+   {
+    th = ph = 0;
+    xFactor = 0.04;
+   }
+    // Press "2" to enable "+" and "-" option to grow the graph in the x direction.
+    else if (ch == '2')
+    {
+        if (applyXFactor)
+        {
+            applyXFactor = 0;
+        }
+        else
+        {
+            applyXFactor = 1;
+        }
+    }
+    else if (ch == '+')
+    {
+        if (applyXFactor)
+        {
+            xFactor += 0.001;
+        }
+    }
+    else if (ch == '-')
+    {
+        if (applyXFactor)
+        {
+            xFactor -= 0.001;
+        }
+    }
     //  Tell GLUT it is necessary to redisplay the scene
    glutPostRedisplay();
 }
